@@ -698,107 +698,109 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const pdfButtons = document.querySelectorAll('.pdf-btn');
-        const pdfModal = new bootstrap.Modal(document.getElementById('pdfModal'));
-        const pdfFrame = document.getElementById('pdfFrame');
-        const downloadPdf = document.getElementById('downloadPdf');
-        const pdfModalLabel = document.getElementById('pdfModalLabel');
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const pdfButtons = document.querySelectorAll('.pdf-btn');
+    const pdfModal = new bootstrap.Modal(document.getElementById('pdfModal'));
+    const pdfFrame = document.getElementById('pdfFrame');
+    const downloadPdf = document.getElementById('downloadPdf');
+    const pdfModalLabel = document.getElementById('pdfModalLabel');
+    
+    pdfButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const pdfFile = this.getAttribute('data-pdf');
+        const pdfTitle = this.getAttribute('data-title');
         
-        pdfButtons.forEach(button => {
-          button.addEventListener('click', function() {
-            const pdfFile = this.getAttribute('data-pdf');
-            const pdfTitle = this.getAttribute('data-title');
-            
-            pdfFrame.src = `./pdfs/${pdfFile}`;
-            downloadPdf.href = `./pdfs/${pdfFile}`;
-            pdfModalLabel.textContent = pdfTitle;
-            
-            pdfModal.show();
-          });
-        });
+        pdfFrame.src = `./pdfs/${pdfFile}`;
+        downloadPdf.href = `./pdfs/${pdfFile}`;
+        pdfModalLabel.textContent = pdfTitle;
         
-        document.getElementById('pdfModal').addEventListener('hidden.bs.modal', function() {
-          pdfFrame.src = '';
-        });
-        
-        // Popup Form Functionality
-        const popupForm = document.getElementById('popupForm');
-        const closePopup = document.getElementById('closePopup');
-        const registrationForm = document.getElementById('registrationForm');
-        
-        // Check if user has already submitted the form
-        function hasSubmittedForm() {
-          return localStorage.getItem('formSubmitted') === 'true';
-        }
-        
-        // Show popup after 5 seconds if user hasn't submitted the form
-        if (!hasSubmittedForm()) {
-          setTimeout(function() {
-            popupForm.classList.remove('hidden');
-          }, 5000);
-        }
-        
-        // Close popup when X is clicked
-        closePopup.addEventListener('click', function() {
-          popupForm.classList.add('hidden');
-        });
-        
-        // Close popup when clicking outside the form
-        popupForm.addEventListener('click', function(e) {
-          if (e.target === popupForm) {
-            popupForm.classList.add('hidden');
-          }
-        });
-        
-        // Handle form submission
-        registrationForm.addEventListener('submit', function(e) {
-          e.preventDefault();
-          
-          // Get form data
-          const formData = {
-            name: document.getElementById('name').value,
-            country: document.getElementById('country').value,
-            email: document.getElementById('email').value,
-            specialization: document.getElementById('specialization').value,
-            timestamp: new Date().toISOString()
-          };
-          
-          // Submit to Google Sheets
-          submitToGoogleSheets(formData);
-          
-          // Hide the popup
-          popupForm.classList.add('hidden');
-          
-          // Mark form as submitted in localStorage
-          localStorage.setItem('formSubmitted', 'true');
-          
-          // Show success message
-          alert('Thank you for registering! We will keep you updated about the APAC Summit.');
-        });
-        
-        // Function to submit data to Google Sheets
-        function submitToGoogleSheets(data) {
-          // Replace with your Google Apps Script Web App URL
-          const scriptURL = 'https://script.google.com/macros/s/AKfycbygmVUu36h9VUlpCaoVBf5ZpAZ9pCVun2LEtqOqh3K1KVNHNsKS-U1XJpGXM3WPyJ6CUQ/exec';
-          
-          fetch(scriptURL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data)
-          })
-          .then(() => {
-            console.log('Form data submitted successfully');
-          })
-          .catch(error => {
-            console.error('Error submitting form data:', error);
-          });
-        }
+        pdfModal.show();
       });
-    </script>
+    });
+    
+    document.getElementById('pdfModal').addEventListener('hidden.bs.modal', function() {
+      pdfFrame.src = '';
+    });
+    
+    // Popup Form Functionality
+    const popupForm = document.getElementById('popupForm');
+    const closePopup = document.getElementById('closePopup');
+    const registrationForm = document.getElementById('registrationForm');
+    
+    // Check if user has already submitted the form - CORRECTED VERSION
+    function hasSubmittedForm() {
+      return localStorage.getItem('doctorRegistered') === 'true';
+    }
+    
+    // Show popup after 5 seconds if user hasn't submitted the form
+    if (!hasSubmittedForm()) {
+      setTimeout(function() {
+        popupForm.classList.remove('hidden');
+      }, 5000);
+    }
+    
+    // Close popup when X is clicked
+    closePopup.addEventListener('click', function() {
+      popupForm.classList.add('hidden');
+    });
+    
+    // Close popup when clicking outside the form
+    popupForm.addEventListener('click', function(e) {
+      if (e.target === popupForm) {
+        popupForm.classList.add('hidden');
+      }
+    });
+    
+    // Handle form submission - CORRECTED VERSION
+    registrationForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Get form data
+      const formData = {
+        name: document.getElementById('name').value,
+        country: document.getElementById('country').value,
+        email: document.getElementById('email').value,
+        specialization: document.getElementById('specialization').value,
+        timestamp: new Date().toISOString()
+      };
+      
+      // Store with consistent key for unique identification
+      localStorage.setItem('doctorRegistered', 'true');
+      localStorage.setItem('doctorEmail', formData.email);
+      localStorage.setItem('registrationDate', new Date().toISOString());
+      
+      // Submit to Google Sheets
+      submitToGoogleSheets(formData);
+      
+      // Hide the popup
+      popupForm.classList.add('hidden');
+      
+      // Show success message
+      alert('Thank you for registering! We will keep you updated about the APAC Summit.');
+    });
+    
+    // Function to submit data to Google Sheets
+    function submitToGoogleSheets(data) {
+      // Replace with your Google Apps Script Web App URL
+      const scriptURL = 'https://script.google.com/macros/s/AKfycbygmVUu36h9VUlpCaoVBf5ZpAZ9pCVun2LEtqOqh3K1KVNHNsKS-U1XJpGXM3WPyJ6CUQ/exec';
+      
+      fetch(scriptURL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+      })
+      .then(() => {
+        console.log('Form data submitted successfully');
+      })
+      .catch(error => {
+        console.error('Error submitting form data:', error);
+      });
+    }
+  });
+</script>
   </body>
 </html>
