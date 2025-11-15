@@ -10,26 +10,27 @@
     />
     <style>
       /* Existing styles remain the same */
-      .carousel-control-prev-icon{
-        background-image: url('./images/left.webp') !important;
+      .carousel-control-prev-icon {
+        background-image: url("./images/left.webp") !important;
       }
-       .carousel-control-next-icon{
-        background-image: url('./images/right.webp') !important;
+      .carousel-control-next-icon {
+        background-image: url("./images/right.webp") !important;
       }
       body {
         overflow-x: hidden;
         max-width: 100vw;
       }
 
-      .container, .containerDiv {
+      .container,
+      .containerDiv {
         overflow-x: hidden;
       }
 
-      .carousel-control-prev{
+      .carousel-control-prev {
         width: 5% !important;
       }
 
-      .carousel-control-next{
+      .carousel-control-next {
         width: 5% !important;
       }
 
@@ -39,7 +40,7 @@
       }
 
       @font-face {
-        font-family: "swis721_BT_roman"; 
+        font-family: "swis721_BT_roman";
         src: url("./fonts/swis721_BT_roman.ttf");
       }
 
@@ -162,12 +163,12 @@
           margin-bottom: 1rem;
         }
 
-        .global{
+        .global {
           font-size: 2rem;
         }
       }
 
-      .home-bg{
+      .home-bg {
         height: 82vh;
       }
 
@@ -227,7 +228,7 @@
           padding: 0.5rem 0rem !important;
         }
 
-        .home-bg{
+        .home-bg {
           height: auto !important;
         }
       }
@@ -236,29 +237,29 @@
         max-width: 90%;
         height: 90vh;
       }
-      
+
       .pdf-modal .modal-content {
         height: 100%;
       }
-      
+
       .pdf-modal .modal-body {
         height: calc(100% - 120px);
         padding: 0;
         display: flex;
         flex-direction: column;
       }
-      
+
       .pdf-viewer {
         flex-grow: 1;
         border: none;
         width: 100%;
       }
-      
+
       .pdf-modal .modal-header {
         background: #004383;
         color: white;
       }
-      
+
       .pdf-modal .modal-footer {
         background: #f8f9fa;
       }
@@ -276,7 +277,7 @@
         align-items: center;
         z-index: 9999;
       }
-      
+
       .popup-content {
         background: linear-gradient(to bottom, #006b8f 0%, #00b3a3 100%);
         padding: 30px;
@@ -286,7 +287,7 @@
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         position: relative;
       }
-      
+
       .popup-close {
         position: absolute;
         top: 10px;
@@ -296,27 +297,27 @@
         color: white;
         display: none; /* Initially hidden */
       }
-      
+
       .popup-close.enabled {
         display: block; /* Show when form is submitted */
       }
-      
+
       .popup-title {
         color: white;
         text-align: center;
         margin-bottom: 20px;
         font-family: "swis_cn_bt_bold";
       }
-      
+
       .form-label {
         color: white;
         font-family: "swis721_BT_roman";
       }
-      
+
       .form-control {
         margin-bottom: 15px;
       }
-      
+
       .submit-btn {
         background-color: #004383;
         color: white;
@@ -327,21 +328,21 @@
         font-family: "swis721_BT_roman";
         margin-top: 10px;
       }
-      
+
       .submit-btn:hover {
         background-color: #003366;
       }
-      
+
       .hidden {
         display: none;
       }
-      
+
       /* NEW: Body freeze styles */
       body.frozen {
         overflow: hidden !important;
         height: 100vh;
       }
-      
+
       .mandatory-message {
         color: #ffcc00;
         font-size: 0.9rem;
@@ -357,11 +358,13 @@
       <div class="popup-content">
         <span class="popup-close" id="closePopup">&times;</span>
         <h3 class="popup-title">Register for APAC Summit Updates</h3>
-        <p class="mandatory-message">Registration is required to continue browsing</p>
+        <p class="mandatory-message">
+          Registration is required to continue browsing
+        </p>
         <form id="registrationForm">
           <div class="mb-3">
             <label for="name" class="form-label">Name</label>
-            <input type="text" class="form-control" id="name" required>
+            <input type="text" class="form-control" id="name" required />
           </div>
           <div class="mb-3">
             <label for="country" class="form-label">Country</label>
@@ -385,10 +388,12 @@
           </div>
           <div class="mb-3">
             <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="email" required>
+            <input type="email" class="form-control" id="email" required />
           </div>
           <div class="mb-3">
-            <label for="specialization" class="form-label">Specialization</label>
+            <label for="specialization" class="form-label"
+              >Specialization</label
+            >
             <select class="form-control" id="specialization" required>
               <option value="">Select Specialization</option>
               <option value="Respiratory">Respiratory</option>
@@ -410,7 +415,7 @@
       <div class="container-fluid">
         <a class="navbar-brand fw-bold text-white ms-3" href="#"
           ><img class="main-logo" src="./images/apac.webp" alt="APAC Logo"
-        /></a>  
+        /></a>
       </div>
     </nav>
 
@@ -439,79 +444,152 @@
       </div>
     </section>
 
-    <section class="" style="background:#ffffff">
+    <section class="" style="background: #ffffff">
       <div class="container">
         <div id="imageSlider" class="carousel slide" data-bs-ride="carousel">
           <div class="carousel-inner">
             <div class="carousel-item active">
               <picture>
-                <source media="(max-width: 767px)" srcset="./images/1-mob.webp" />
-                <img src="./images/1.webp" class="d-block w-100 slider-single-img" alt="Slide 1">
+                <source
+                  media="(max-width: 767px)"
+                  srcset="./images/1-mob.webp"
+                />
+                <img
+                  src="./images/1.webp"
+                  class="d-block w-100 slider-single-img"
+                  alt="Slide 1"
+                />
               </picture>
             </div>
 
             <div class="carousel-item">
               <picture>
-                <source media="(max-width: 767px)" srcset="./images/2-mob.webp" />
-                <img src="./images/2.webp" class="d-block w-100 slider-single-img" alt="Slide 2">
+                <source
+                  media="(max-width: 767px)"
+                  srcset="./images/2-mob.webp"
+                />
+                <img
+                  src="./images/2.webp"
+                  class="d-block w-100 slider-single-img"
+                  alt="Slide 2"
+                />
               </picture>
             </div>
 
             <div class="carousel-item">
               <picture>
-                <source media="(max-width: 767px)" srcset="./images/3-mob.webp" />
-                <img src="./images/3.webp" class="d-block w-100 slider-single-img" alt="Slide 3">
+                <source
+                  media="(max-width: 767px)"
+                  srcset="./images/3-mob.webp"
+                />
+                <img
+                  src="./images/3.webp"
+                  class="d-block w-100 slider-single-img"
+                  alt="Slide 3"
+                />
               </picture>
             </div>
 
             <div class="carousel-item">
               <picture>
-                <source media="(max-width: 767px)" srcset="./images/4-mob.webp" />
-                <img src="./images/4.webp" class="d-block w-100 slider-single-img" alt="Slide 4">
+                <source
+                  media="(max-width: 767px)"
+                  srcset="./images/4-mob.webp"
+                />
+                <img
+                  src="./images/4.webp"
+                  class="d-block w-100 slider-single-img"
+                  alt="Slide 4"
+                />
               </picture>
             </div>
 
             <div class="carousel-item">
               <picture>
-                <source media="(max-width: 767px)" srcset="./images/5-mob.webp" />
-                <img src="./images/5.webp" class="d-block w-100 slider-single-img" alt="Slide 5">
+                <source
+                  media="(max-width: 767px)"
+                  srcset="./images/5-mob.webp"
+                />
+                <img
+                  src="./images/5.webp"
+                  class="d-block w-100 slider-single-img"
+                  alt="Slide 5"
+                />
               </picture>
             </div>
 
             <div class="carousel-item">
               <picture>
-                <source media="(max-width: 767px)" srcset="./images/6-mob.webp" />
-                <img src="./images/6.webp" class="d-block w-100 slider-single-img" alt="Slide 6">
+                <source
+                  media="(max-width: 767px)"
+                  srcset="./images/6-mob.webp"
+                />
+                <img
+                  src="./images/6.webp"
+                  class="d-block w-100 slider-single-img"
+                  alt="Slide 6"
+                />
               </picture>
             </div>
 
             <div class="carousel-item">
               <picture>
-                <source media="(max-width: 767px)" srcset="./images/7-mob.webp" />
-                <img src="./images/7.webp" class="d-block w-100 slider-single-img" alt="Slide 7">
+                <source
+                  media="(max-width: 767px)"
+                  srcset="./images/7-mob.webp"
+                />
+                <img
+                  src="./images/7.webp"
+                  class="d-block w-100 slider-single-img"
+                  alt="Slide 7"
+                />
               </picture>
             </div>
 
             <div class="carousel-item">
               <picture>
-                <source media="(max-width: 767px)" srcset="./images/8-mob.webp" />
-                <img src="./images/8.webp" class="d-block w-100 slider-single-img" alt="Slide 8">
+                <source
+                  media="(max-width: 767px)"
+                  srcset="./images/8-mob.webp"
+                />
+                <img
+                  src="./images/8.webp"
+                  class="d-block w-100 slider-single-img"
+                  alt="Slide 8"
+                />
               </picture>
             </div>
 
             <div class="carousel-item">
               <picture>
-                <source media="(max-width: 767px)" srcset="./images/9-mob.webp" />
-                <img src="./images/9.webp" class="d-block w-100 slider-single-img" alt="Slide 9">
+                <source
+                  media="(max-width: 767px)"
+                  srcset="./images/9-mob.webp"
+                />
+                <img
+                  src="./images/9.webp"
+                  class="d-block w-100 slider-single-img"
+                  alt="Slide 9"
+                />
               </picture>
             </div>
           </div>
 
-          <button class="carousel-control-prev" type="button" data-bs-target="#imageSlider" data-bs-slide="prev">
+          <button
+            class="carousel-control-prev"
+            type="button"
+            data-bs-target="#imageSlider"
+            data-bs-slide="prev"
+          >
             <span class="carousel-control-prev-icon"></span>
           </button>
 
-          <button class="carousel-control-next" type="button" data-bs-target="#imageSlider" data-bs-slide="next">
+          <button
+            class="carousel-control-next"
+            type="button"
+            data-bs-target="#imageSlider"
+            data-bs-slide="next"
+          >
             <span class="carousel-control-next-icon"></span>
           </button>
         </div>
@@ -684,6 +762,7 @@
           <img src="./images/f11.webp" class="flag-img" alt="Flag 11" />
           <img src="./images/f12.webp" class="flag-img" alt="Flag 12" />
           <img src="./images/f13.webp" class="flag-img" alt="Flag 13" />
+          <img src="./images/f14.svg" class="flag-img" alt="Flag 13" />
 
           <img src="./images/f1.webp" class="flag-img" alt="Flag 1" />
           <img src="./images/f2.webp" class="flag-img" alt="Flag 2" />
@@ -698,6 +777,7 @@
           <img src="./images/f11.webp" class="flag-img" alt="Flag 11" />
           <img src="./images/f12.webp" class="flag-img" alt="Flag 12" />
           <img src="./images/f13.webp" class="flag-img" alt="Flag 13" />
+          <img src="./images/f14.svg" class="flag-img" alt="Flag 13" />
         </div>
       </div>
     </section>
@@ -716,160 +796,191 @@
       </div>
     </section>
 
-    <div class="modal fade pdf-modal" id="pdfModal" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
+    <div
+      class="modal fade pdf-modal"
+      id="pdfModal"
+      tabindex="-1"
+      aria-labelledby="pdfModalLabel"
+      aria-hidden="true"
+    >
       <div class="modal-dialog modal-xl">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="pdfModalLabel">PDF Document</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
           </div>
           <div class="modal-body">
-            <iframe class="pdf-viewer" id="pdfFrame" src="" frameborder="0"></iframe>
+            <iframe
+              class="pdf-viewer"
+              id="pdfFrame"
+              src=""
+              frameborder="0"
+            ></iframe>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <a id="downloadPdf" class="btn btn-primary" href="" download>Download PDF</a>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <a id="downloadPdf" class="btn btn-primary" href="" download
+              >Download PDF</a
+            >
           </div>
         </div>
       </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const pdfButtons = document.querySelectorAll('.pdf-btn');
-    const pdfModal = new bootstrap.Modal(document.getElementById('pdfModal'));
-    const pdfFrame = document.getElementById('pdfFrame');
-    const downloadPdf = document.getElementById('downloadPdf');
-    const pdfModalLabel = document.getElementById('pdfModalLabel');
-    
-    pdfButtons.forEach(button => {
-      button.addEventListener('click', function() {
-        const pdfFile = this.getAttribute('data-pdf');
-        const pdfTitle = this.getAttribute('data-title');
-        
-        pdfFrame.src = `./pdfs/${pdfFile}`;
-        console.log(pdfFrame.src)
-        downloadPdf.href = `./pdfs/${pdfFile}`;
-        pdfModalLabel.textContent = pdfTitle;
-        
-        pdfModal.show();
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const pdfButtons = document.querySelectorAll(".pdf-btn");
+        const pdfModal = new bootstrap.Modal(
+          document.getElementById("pdfModal")
+        );
+        const pdfFrame = document.getElementById("pdfFrame");
+        const downloadPdf = document.getElementById("downloadPdf");
+        const pdfModalLabel = document.getElementById("pdfModalLabel");
+
+        pdfButtons.forEach((button) => {
+          button.addEventListener("click", function () {
+            const pdfFile = this.getAttribute("data-pdf");
+            const pdfTitle = this.getAttribute("data-title");
+
+            pdfFrame.src = `./pdfs/${pdfFile}`;
+            console.log(pdfFrame.src);
+            downloadPdf.href = `./pdfs/${pdfFile}`;
+            pdfModalLabel.textContent = pdfTitle;
+
+            pdfModal.show();
+          });
+        });
+
+        document
+          .getElementById("pdfModal")
+          .addEventListener("hidden.bs.modal", function () {
+            pdfFrame.src = "";
+          });
+
+        // Popup Form Functionality - MODIFIED
+        const popupForm = document.getElementById("popupForm");
+        const closePopup = document.getElementById("closePopup");
+        const registrationForm = document.getElementById("registrationForm");
+
+        // Check if user has already submitted the form
+        function hasSubmittedForm() {
+          return localStorage.getItem("doctorRegistered") === "true";
+        }
+
+        // Freeze the website
+        function freezeWebsite() {
+          document.body.classList.add("frozen");
+        }
+
+        // Unfreeze the website
+        function unfreezeWebsite() {
+          document.body.classList.remove("frozen");
+        }
+
+        // Enable close button
+        function enableCloseButton() {
+          closePopup.classList.add("enabled");
+        }
+
+        // Check if form is already submitted
+        if (!hasSubmittedForm()) {
+          // Show popup after 5 seconds and freeze website
+          setTimeout(function () {
+            popupForm.classList.remove("hidden");
+            freezeWebsite(); // Freeze website when popup appears
+          }, 5000);
+        } else {
+          // User has already submitted the form
+          unfreezeWebsite();
+          popupForm.classList.add("hidden");
+        }
+
+        // Close popup when X is clicked - only if form is submitted
+        closePopup.addEventListener("click", function () {
+          if (hasSubmittedForm()) {
+            popupForm.classList.add("hidden");
+            unfreezeWebsite();
+          }
+          // If form is not submitted, do nothing (button is hidden)
+        });
+
+        // Close popup when clicking outside the form - only if form is submitted
+        popupForm.addEventListener("click", function (e) {
+          if (e.target === popupForm && hasSubmittedForm()) {
+            popupForm.classList.add("hidden");
+            unfreezeWebsite();
+          }
+        });
+
+        // Handle form submission
+        registrationForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          // Get form data
+          const formData = {
+            name: document.getElementById("name").value,
+            country: document.getElementById("country").value,
+            email: document.getElementById("email").value,
+            specialization: document.getElementById("specialization").value,
+            timestamp: new Date().toISOString(),
+          };
+
+          // Store with consistent key for unique identification
+          localStorage.setItem("doctorRegistered", "true");
+          localStorage.setItem("doctorEmail", formData.email);
+          localStorage.setItem("registrationDate", new Date().toISOString());
+
+          // Enable the close button
+          enableCloseButton();
+
+          // Submit to Google Sheets
+          submitToGoogleSheets(formData);
+
+          // Hide the popup and unfreeze the website
+          popupForm.classList.add("hidden");
+          unfreezeWebsite();
+
+          // Show success message
+          alert(
+            "Thank you for registering! You can now continue browsing the website."
+          );
+        });
+
+        // Function to submit data to Google Sheets
+        function submitToGoogleSheets(data) {
+          // Replace with your Google Apps Script Web App URL
+          const scriptURL =
+            "https://script.google.com/macros/s/AKfycbygmVUu36h9VUlpCaoVBf5ZpAZ9pCVun2LEtqOqh3K1KVNHNsKS-U1XJpGXM3WPyJ6CUQ/exec";
+
+          fetch(scriptURL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          })
+            .then(() => {
+              console.log("Form data submitted successfully");
+            })
+            .catch((error) => {
+              console.error("Error submitting form data:", error);
+            });
+        }
       });
-    });
-    
-    document.getElementById('pdfModal').addEventListener('hidden.bs.modal', function() {
-      pdfFrame.src = '';
-    });
-    
-    // Popup Form Functionality - MODIFIED
-    const popupForm = document.getElementById('popupForm');
-    const closePopup = document.getElementById('closePopup');
-    const registrationForm = document.getElementById('registrationForm');
-    
-    // Check if user has already submitted the form
-    function hasSubmittedForm() {
-      return localStorage.getItem('doctorRegistered') === 'true';
-    }
-    
-    // Freeze the website
-    function freezeWebsite() {
-      document.body.classList.add('frozen');
-    }
-    
-    // Unfreeze the website
-    function unfreezeWebsite() {
-      document.body.classList.remove('frozen');
-    }
-    
-    // Enable close button
-    function enableCloseButton() {
-      closePopup.classList.add('enabled');
-    }
-    
-    // Check if form is already submitted
-    if (!hasSubmittedForm()) {
-      // Show popup after 5 seconds and freeze website
-      setTimeout(function() {
-        popupForm.classList.remove('hidden');
-        freezeWebsite(); // Freeze website when popup appears
-      }, 5000);
-    } else {
-      // User has already submitted the form
-      unfreezeWebsite();
-      popupForm.classList.add('hidden');
-    }
-    
-    // Close popup when X is clicked - only if form is submitted
-    closePopup.addEventListener('click', function() {
-      if (hasSubmittedForm()) {
-        popupForm.classList.add('hidden');
-        unfreezeWebsite();
-      }
-      // If form is not submitted, do nothing (button is hidden)
-    });
-    
-    // Close popup when clicking outside the form - only if form is submitted
-    popupForm.addEventListener('click', function(e) {
-      if (e.target === popupForm && hasSubmittedForm()) {
-        popupForm.classList.add('hidden');
-        unfreezeWebsite();
-      }
-    });
-    
-    // Handle form submission
-    registrationForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      // Get form data
-      const formData = {
-        name: document.getElementById('name').value,
-        country: document.getElementById('country').value,
-        email: document.getElementById('email').value,
-        specialization: document.getElementById('specialization').value,
-        timestamp: new Date().toISOString()
-      };
-      
-      // Store with consistent key for unique identification
-      localStorage.setItem('doctorRegistered', 'true');
-      localStorage.setItem('doctorEmail', formData.email);
-      localStorage.setItem('registrationDate', new Date().toISOString());
-      
-      // Enable the close button
-      enableCloseButton();
-      
-      // Submit to Google Sheets
-      submitToGoogleSheets(formData);
-      
-      // Hide the popup and unfreeze the website
-      popupForm.classList.add('hidden');
-      unfreezeWebsite();
-      
-      // Show success message
-      alert('Thank you for registering! You can now continue browsing the website.');
-    });
-    
-    // Function to submit data to Google Sheets
-    function submitToGoogleSheets(data) {
-      // Replace with your Google Apps Script Web App URL
-      const scriptURL = 'https://script.google.com/macros/s/AKfycbygmVUu36h9VUlpCaoVBf5ZpAZ9pCVun2LEtqOqh3K1KVNHNsKS-U1XJpGXM3WPyJ6CUQ/exec';
-      
-      fetch(scriptURL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data)
-      })
-      .then(() => {
-        console.log('Form data submitted successfully');
-      })
-      .catch(error => {
-        console.error('Error submitting form data:', error);
-      });
-    }
-  });
-</script>
+    </script>
   </body>
 </html>
