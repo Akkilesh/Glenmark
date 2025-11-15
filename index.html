@@ -750,6 +750,7 @@
         const pdfTitle = this.getAttribute('data-title');
         
         pdfFrame.src = `./pdfs/${pdfFile}`;
+        console.log(pdfFrame.src)
         downloadPdf.href = `./pdfs/${pdfFile}`;
         pdfModalLabel.textContent = pdfTitle;
         
