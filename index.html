@@ -9,6 +9,7 @@
       rel="stylesheet"
     />
     <style>
+      /* Existing styles remain the same */
       .carousel-control-prev-icon{
         background-image: url('./images/left.webp') !important;
       }
@@ -262,14 +263,14 @@
         background: #f8f9fa;
       }
 
-      /* Popup Form Styles */
+      /* Popup Form Styles - MODIFIED */
       .popup-form {
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(0, 0, 0, 0.7);
+        background-color: rgba(0, 0, 0, 0.9);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -293,6 +294,11 @@
         font-size: 24px;
         cursor: pointer;
         color: white;
+        display: none; /* Initially hidden */
+      }
+      
+      .popup-close.enabled {
+        display: block; /* Show when form is submitted */
       }
       
       .popup-title {
@@ -329,14 +335,29 @@
       .hidden {
         display: none;
       }
+      
+      /* NEW: Body freeze styles */
+      body.frozen {
+        overflow: hidden !important;
+        height: 100vh;
+      }
+      
+      .mandatory-message {
+        color: #ffcc00;
+        font-size: 0.9rem;
+        text-align: center;
+        margin-top: 10px;
+        font-family: "swis721_BT_roman";
+      }
     </style>
   </head>
   <body>
-    <!-- Popup Form -->
+    <!-- Popup Form - MODIFIED with updated country dropdown -->
     <div id="popupForm" class="popup-form hidden">
       <div class="popup-content">
         <span class="popup-close" id="closePopup">&times;</span>
         <h3 class="popup-title">Register for APAC Summit Updates</h3>
+        <p class="mandatory-message">Registration is required to continue browsing</p>
         <form id="registrationForm">
           <div class="mb-3">
             <label for="name" class="form-label">Name</label>
@@ -344,7 +365,23 @@
           </div>
           <div class="mb-3">
             <label for="country" class="form-label">Country</label>
-            <input type="text" class="form-control" id="country" required>
+            <select class="form-control" id="country" required>
+              <option value="">Select Country</option>
+              <option value="India">India</option>
+              <option value="Malaysia">Malaysia</option>
+              <option value="Philippines">Philippines</option>
+              <option value="Cambodia">Cambodia</option>
+              <option value="Kenya">Kenya</option>
+              <option value="Myanmar">Myanmar</option>
+              <option value="Maldives">Maldives</option>
+              <option value="Sri Lanka">Sri Lanka</option>
+              <option value="Australia">Australia</option>
+              <option value="UK">UK</option>
+              <option value="US">US</option>
+              <option value="Thailand">Thailand</option>
+              <option value="Switzerland">Switzerland</option>
+              <option value="UAE">UAE</option>
+            </select>
           </div>
           <div class="mb-3">
             <label for="email" class="form-label">Email</label>
@@ -365,6 +402,7 @@
       </div>
     </div>
 
+    <!-- Rest of the HTML content remains the same -->
     <nav
       class="navbar navbar-expand-lg navbar-dark"
       style="background: linear-gradient(to right, #014280, #e6f7ff)"
@@ -723,36 +761,62 @@
       pdfFrame.src = '';
     });
     
-    // Popup Form Functionality
+    // Popup Form Functionality - MODIFIED
     const popupForm = document.getElementById('popupForm');
     const closePopup = document.getElementById('closePopup');
     const registrationForm = document.getElementById('registrationForm');
     
-    // Check if user has already submitted the form - CORRECTED VERSION
+    // Check if user has already submitted the form
     function hasSubmittedForm() {
       return localStorage.getItem('doctorRegistered') === 'true';
     }
     
-    // Show popup after 5 seconds if user hasn't submitted the form
-    if (!hasSubmittedForm()) {
-      setTimeout(function() {
-        popupForm.classList.remove('hidden');
-      }, 5000);
+    // Freeze the website
+    function freezeWebsite() {
+      document.body.classList.add('frozen');
     }
     
-    // Close popup when X is clicked
-    closePopup.addEventListener('click', function() {
+    // Unfreeze the website
+    function unfreezeWebsite() {
+      document.body.classList.remove('frozen');
+    }
+    
+    // Enable close button
+    function enableCloseButton() {
+      closePopup.classList.add('enabled');
+    }
+    
+    // Check if form is already submitted
+    if (!hasSubmittedForm()) {
+      // Show popup after 5 seconds and freeze website
+      setTimeout(function() {
+        popupForm.classList.remove('hidden');
+        freezeWebsite(); // Freeze website when popup appears
+      }, 5000);
+    } else {
+      // User has already submitted the form
+      unfreezeWebsite();
       popupForm.classList.add('hidden');
+    }
+    
+    // Close popup when X is clicked - only if form is submitted
+    closePopup.addEventListener('click', function() {
+      if (hasSubmittedForm()) {
+        popupForm.classList.add('hidden');
+        unfreezeWebsite();
+      }
+      // If form is not submitted, do nothing (button is hidden)
     });
     
-    // Close popup when clicking outside the form
+    // Close popup when clicking outside the form - only if form is submitted
     popupForm.addEventListener('click', function(e) {
-      if (e.target === popupForm) {
+      if (e.target === popupForm && hasSubmittedForm()) {
         popupForm.classList.add('hidden');
+        unfreezeWebsite();
       }
     });
     
-    // Handle form submission - CORRECTED VERSION
+    // Handle form submission
     registrationForm.addEventListener('submit', function(e) {
       e.preventDefault();
       
@@ -770,14 +834,18 @@
       localStorage.setItem('doctorEmail', formData.email);
       localStorage.setItem('registrationDate', new Date().toISOString());
       
+      // Enable the close button
+      enableCloseButton();
+      
       // Submit to Google Sheets
       submitToGoogleSheets(formData);
       
-      // Hide the popup
+      // Hide the popup and unfreeze the website
       popupForm.classList.add('hidden');
+      unfreezeWebsite();
       
       // Show success message
-      alert('Thank you for registering! We will keep you updated about the APAC Summit.');
+      alert('Thank you for registering! You can now continue browsing the website.');
     });
     
     // Function to submit data to Google Sheets
