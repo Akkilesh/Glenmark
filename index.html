@@ -931,10 +931,52 @@
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {
+        // Safari-compatible storage check
+        function isStorageAvailable() {
+          try {
+            const test = 'test';
+            localStorage.setItem(test, test);
+            localStorage.removeItem(test);
+            return true;
+          } catch (e) {
+            return false;
+          }
+        }
+
+        // Safe storage functions for Safari
+        function setSafeStorage(key, value) {
+          try {
+            if (isStorageAvailable()) {
+              localStorage.setItem(key, value);
+            }
+          } catch (e) {
+            console.log('Storage not available in Safari private mode');
+          }
+        }
+
+        function getSafeStorage(key) {
+          try {
+            if (isStorageAvailable()) {
+              return localStorage.getItem(key);
+            }
+          } catch (e) {
+            return null;
+          }
+          return null;
+        }
+
+        // Check if forms are submitted - UPDATED FOR SAFARI
+        function hasSubmittedForm() {
+          return getSafeStorage("doctorRegistered") === "true";
+        }
+
+        function hasSubmittedDecForm() {
+          return getSafeStorage("doctorDecRegistered") === "true";
+        }
+
+        // Your existing PDF modal code (unchanged)
         const pdfButtons = document.querySelectorAll(".pdf-btn");
-        const pdfModal = new bootstrap.Modal(
-          document.getElementById("pdfModal")
-        );
+        const pdfModal = new bootstrap.Modal(document.getElementById("pdfModal"));
         const pdfFrame = document.getElementById("pdfFrame");
         const downloadPdf = document.getElementById("downloadPdf");
         const pdfModalLabel = document.getElementById("pdfModalLabel");
@@ -951,44 +993,33 @@
             console.log("Full PDF path:", pdfPath);
             console.log("PDF Title:", pdfTitle);
 
-            // Show loading indicator
             pdfLoading.style.display = "flex";
             pdfFrame.style.display = "none";
-
-            // Set modal title
             pdfModalLabel.textContent = pdfTitle;
-
-            // Show modal immediately
             pdfModal.show();
 
-            // Test if PDF exists first
             fetch(pdfPath)
               .then((response) => {
                 console.log("Fetch Response Status:", response.status);
                 console.log("Fetch Response OK:", response.ok);
 
                 if (response.ok) {
-                  // Set the PDF source
                   pdfFrame.src = pdfPath;
                   downloadPdf.href = pdfPath;
 
-                  // Hide loading and show PDF when loaded
                   pdfFrame.onload = function () {
                     pdfLoading.style.display = "none";
                     pdfFrame.style.display = "block";
                     console.log("✅ PDF loaded successfully");
                   };
 
-                  // Fallback in case iframe onload doesn't fire
                   setTimeout(function () {
                     pdfLoading.style.display = "none";
                     pdfFrame.style.display = "block";
                   }, 2000);
                 } else {
                   console.error("❌ PDF not found, status:", response.status);
-                  throw new Error(
-                    "PDF not found (HTTP " + response.status + ")"
-                  );
+                  throw new Error("PDF not found (HTTP " + response.status + ")");
                 }
               })
               .catch((error) => {
@@ -1004,48 +1035,30 @@
           });
         });
 
-        document
-          .getElementById("pdfModal")
-          .addEventListener("hidden.bs.modal", function () {
-            pdfFrame.src = "";
-            pdfLoading.style.display = "flex";
-            pdfFrame.style.display = "none";
-            // Reset loading content
-            pdfLoading.innerHTML = `
-              <div class="spinner-border" role="status">
-                <span class="visually-hidden">Loading PDF...</span>
-              </div>
-              <p class="mt-3">Loading PDF document...</p>
-            `;
-          });
+        document.getElementById("pdfModal").addEventListener("hidden.bs.modal", function () {
+          pdfFrame.src = "";
+          pdfLoading.style.display = "flex";
+          pdfFrame.style.display = "none";
+          pdfLoading.innerHTML = `
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading PDF...</span>
+            </div>
+            <p class="mt-3">Loading PDF document...</p>
+          `;
+        });
 
-        // Popup Form Functionality
+        // Popup Form Elements
         const popupForm = document.getElementById("popupForm");
         const closePopup = document.getElementById("closePopup");
         const registrationForm = document.getElementById("registrationForm");
-
-        // New December Popup Form Elements
         const decPopupForm = document.getElementById("decPopupForm");
         const closeDecPopup = document.getElementById("closeDecPopup");
-        const decRegistrationForm = document.getElementById(
-          "decRegistrationForm"
-        );
-
-        // Check if user has already submitted the original form
-        function hasSubmittedForm() {
-          return localStorage.getItem("doctorRegistered") === "true";
-        }
-
-        // Check if user has already submitted the December form
-        function hasSubmittedDecForm() {
-          return localStorage.getItem("doctorDecRegistered") === "true";
-        }
+        const decRegistrationForm = document.getElementById("decRegistrationForm");
 
         // Check if current date is after December 11, 2025
         function isAfterDec11() {
           const currentDate = new Date();
           const dec11Date = new Date("December 11, 2025");
-
           return currentDate >= dec11Date;
         }
 
@@ -1069,11 +1082,9 @@
           let scriptURL;
 
           if (data.formType === "original") {
-            scriptURL =
-              "https://script.google.com/macros/s/AKfycbygmVUu36h9VUlpCaoVBf5ZpAZ9pCVun2LEtqOqh3K1KVNHNsKS-U1XJpGXM3WPyJ6CUQ/exec";
+            scriptURL = "https://script.google.com/macros/s/AKfycbygmVUu36h9VUlpCaoVBf5ZpAZ9pCVun2LEtqOqh3K1KVNHNsKS-U1XJpGXM3WPyJ6CUQ/exec";
           } else if (data.formType === "december") {
-            scriptURL =
-              "https://script.google.com/macros/s/AKfycbyAIRfH-jhNIvwx-Sh4BFizrBBr20t_ZKG93uhfzBrdPedcamJlFacbrRkCB2wzENQz/exec";
+            scriptURL = "https://script.google.com/macros/s/AKfycbyAIRfH-jhNIvwx-Sh4BFizrBBr20t_ZKG93uhfzBrdPedcamJlFacbrRkCB2wzENQz/exec";
           }
 
           fetch(scriptURL, {
@@ -1092,16 +1103,15 @@
             });
         }
 
-        // Check which form to show
+        // Check which form to show - UPDATED FOR SAFARI
         if (isAfterDec11()) {
           // Show December popup after 5 seconds if not submitted
           if (!hasSubmittedDecForm()) {
             setTimeout(function () {
               decPopupForm.classList.remove("hidden");
-              freezeWebsite(); // Freeze website when popup appears
+              freezeWebsite();
             }, 5000);
           } else {
-            // User has already submitted the December form
             unfreezeWebsite();
             decPopupForm.classList.add("hidden");
           }
@@ -1110,34 +1120,31 @@
           if (!hasSubmittedForm()) {
             setTimeout(function () {
               popupForm.classList.remove("hidden");
-              freezeWebsite(); // Freeze website when popup appears
+              freezeWebsite();
             }, 5000);
           } else {
-            // User has already submitted the original form
             unfreezeWebsite();
             popupForm.classList.add("hidden");
           }
         }
 
-        // Close original popup when X is clicked - only if form is submitted
+        // Close original popup when X is clicked
         closePopup.addEventListener("click", function () {
           if (hasSubmittedForm()) {
             popupForm.classList.add("hidden");
             unfreezeWebsite();
           }
-          // If form is not submitted, do nothing (button is hidden)
         });
 
-        // Close December popup when X is clicked - only if form is submitted
+        // Close December popup when X is clicked
         closeDecPopup.addEventListener("click", function () {
           if (hasSubmittedDecForm()) {
             decPopupForm.classList.add("hidden");
             unfreezeWebsite();
           }
-          // If form is not submitted, do nothing (button is hidden)
         });
 
-        // Close original popup when clicking outside the form - only if form is submitted
+        // Close original popup when clicking outside
         popupForm.addEventListener("click", function (e) {
           if (e.target === popupForm && hasSubmittedForm()) {
             popupForm.classList.add("hidden");
@@ -1145,7 +1152,7 @@
           }
         });
 
-        // Close December popup when clicking outside the form - only if form is submitted
+        // Close December popup when clicking outside
         decPopupForm.addEventListener("click", function (e) {
           if (e.target === decPopupForm && hasSubmittedDecForm()) {
             decPopupForm.classList.add("hidden");
@@ -1153,11 +1160,10 @@
           }
         });
 
-        // Handle original form submission
+        // Handle original form submission - UPDATED FOR SAFARI
         registrationForm.addEventListener("submit", function (e) {
           e.preventDefault();
 
-          // Get form data
           const formData = {
             name: document.getElementById("name").value,
             country: document.getElementById("country").value,
@@ -1167,32 +1173,23 @@
             formType: "original",
           };
 
-          // Store with consistent key for unique identification
-          localStorage.setItem("doctorRegistered", "true");
-          localStorage.setItem("doctorEmail", formData.email);
-          localStorage.setItem("registrationDate", new Date().toISOString());
+          // Use safe storage for Safari
+          setSafeStorage("doctorRegistered", "true");
+          setSafeStorage("doctorEmail", formData.email);
+          setSafeStorage("registrationDate", new Date().toISOString());
 
-          // Enable the close button
           enableCloseButton(closePopup);
-
-          // Submit to Google Sheets
           submitToGoogleSheets(formData);
-
-          // Hide the popup and unfreeze the website
           popupForm.classList.add("hidden");
           unfreezeWebsite();
-
-          // Show success message
-          alert(
-            "Thank you for registering! You can now continue browsing the website."
-          );
+          
+          alert("Thank you for registering! You can now continue browsing the website.");
         });
 
-        // Handle December form submission
+        // Handle December form submission - UPDATED FOR SAFARI
         decRegistrationForm.addEventListener("submit", function (e) {
           e.preventDefault();
 
-          // Get form data
           const formData = {
             name: document.getElementById("decName").value,
             country: document.getElementById("decCountry").value,
@@ -1202,25 +1199,17 @@
             formType: "december",
           };
 
-          // Store with consistent key for unique identification
-          localStorage.setItem("doctorDecRegistered", "true");
-          localStorage.setItem("doctorDecEmail", formData.email);
-          localStorage.setItem("decRegistrationDate", new Date().toISOString());
+          // Use safe storage for Safari
+          setSafeStorage("doctorDecRegistered", "true");
+          setSafeStorage("doctorDecEmail", formData.email);
+          setSafeStorage("decRegistrationDate", new Date().toISOString());
 
-          // Enable the close button
           enableCloseButton(closeDecPopup);
-
-          // Submit to Google Sheets
           submitToGoogleSheets(formData);
-
-          // Hide the popup and unfreeze the website
           decPopupForm.classList.add("hidden");
           unfreezeWebsite();
-
-          // Show success message
-          alert(
-            "Thank you for your feedback! You can now continue browsing the website."
-          );
+          
+          alert("Thank you for your feedback! You can now continue browsing the website.");
         });
       });
     </script>
