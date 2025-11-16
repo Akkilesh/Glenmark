@@ -173,9 +173,13 @@
         height: 82vh;
       }
 
-      .sp-profile-container .col-md-4{
+      .sp-profile-container {
+        background: #00a59f !important;
+      }
+
+      .sp-profile-container .col-md-4 {
         padding: 0rem !important;
-            border-right: 10px solid white;
+        border-right: 10px solid white;
       }
 
       @media (max-width: 768px) {
@@ -636,7 +640,9 @@
           CONGRESS NEWS AND HIGHLIGHTS
         </h2>
 
-        <div class="row justify-content-center align-items-start bg-white sp-profile-container">
+        <div
+          class="row justify-content-center align-items-start bg-white sp-profile-container"
+        >
           <div class="col-12 col-md-4">
             <div class="p-4 card-gradient">
               <img
@@ -847,44 +853,52 @@
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-       const pdfButtons = document.querySelectorAll(".pdf-btn");
-  const pdfModal = new bootstrap.Modal(document.getElementById("pdfModal"));
-  const pdfFrame = document.getElementById("pdfFrame");
-  const downloadPdf = document.getElementById("downloadPdf");
-  const pdfModalLabel = document.getElementById("pdfModalLabel");
+        const pdfButtons = document.querySelectorAll(".pdf-btn");
+        const pdfModal = new bootstrap.Modal(
+          document.getElementById("pdfModal")
+        );
+        const pdfFrame = document.getElementById("pdfFrame");
+        const downloadPdf = document.getElementById("downloadPdf");
+        const pdfModalLabel = document.getElementById("pdfModalLabel");
 
-  pdfButtons.forEach((button) => {
-    button.addEventListener("click", function () {
-      const pdfFile = this.getAttribute("data-pdf");
-      const pdfTitle = this.getAttribute("data-title");
-      const pdfPath = `./pdfs/${pdfFile}`; // Define pdfPath here
-      
-      console.log("Attempting to load PDF:", pdfPath);
-      
-      // Test if PDF exists first
-      fetch(pdfPath)
-        .then(response => {
-          if (response.ok) {
-            // PDF exists, load it
-            pdfFrame.src = pdfPath;
-            downloadPdf.href = pdfPath;
-            pdfModalLabel.textContent = pdfTitle;
-            pdfModal.show();
-            console.log("PDF loaded successfully:", pdfFile);
-          } else {
-            throw new Error('PDF not found (HTTP ' + response.status + ')');
-          }
-        })
-        .catch(error => {
-          console.error("Error loading PDF:", error);
-          alert(`Sorry, the PDF "${pdfFile}" is currently unavailable.\n\nError: ${error.message}\n\nPlease check the file exists in the pdfs folder.`);
+        pdfButtons.forEach((button) => {
+          button.addEventListener("click", function () {
+            const pdfFile = this.getAttribute("data-pdf");
+            const pdfTitle = this.getAttribute("data-title");
+            const pdfPath = `./pdfs/${pdfFile}`; // Define pdfPath here
+
+            console.log("Attempting to load PDF:", pdfPath);
+
+            // Test if PDF exists first
+            fetch(pdfPath)
+              .then((response) => {
+                if (response.ok) {
+                  // PDF exists, load it
+                  pdfFrame.src = pdfPath;
+                  downloadPdf.href = pdfPath;
+                  pdfModalLabel.textContent = pdfTitle;
+                  pdfModal.show();
+                  console.log("PDF loaded successfully:", pdfFile);
+                } else {
+                  throw new Error(
+                    "PDF not found (HTTP " + response.status + ")"
+                  );
+                }
+              })
+              .catch((error) => {
+                console.error("Error loading PDF:", error);
+                alert(
+                  `Sorry, the PDF "${pdfFile}" is currently unavailable.\n\nError: ${error.message}\n\nPlease check the file exists in the pdfs folder.`
+                );
+              });
+          });
         });
-    });
-  });
 
-  document.getElementById("pdfModal").addEventListener("hidden.bs.modal", function () {
-    pdfFrame.src = "";
-  });
+        document
+          .getElementById("pdfModal")
+          .addEventListener("hidden.bs.modal", function () {
+            pdfFrame.src = "";
+          });
 
         // Popup Form Functionality - MODIFIED
         const popupForm = document.getElementById("popupForm");
