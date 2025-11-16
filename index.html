@@ -363,7 +363,7 @@
     </style>
   </head>
   <body>
-    <!-- Popup Form - MODIFIED with updated country dropdown -->
+    <!-- Original Popup Form -->
     <div id="popupForm" class="popup-form hidden">
       <div class="popup-content">
         <span class="popup-close" id="closePopup">&times;</span>
@@ -412,6 +412,57 @@
             </select>
           </div>
           <button type="submit" class="submit-btn">Submit</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- New Popup Form for December 11, 2025 -->
+    <div id="decPopupForm" class="popup-form hidden">
+      <div class="popup-content">
+        <span class="popup-close" id="closeDecPopup">&times;</span>
+        <h3 class="popup-title">APAC Summit Feedback</h3>
+        <p class="mandatory-message">
+          Share your feedback about the APAC Summit
+        </p>
+        <form id="decRegistrationForm">
+          <div class="mb-3">
+            <label for="decName" class="form-label">Name</label>
+            <input type="text" class="form-control" id="decName" required />
+          </div>
+          <div class="mb-3">
+            <label for="decCountry" class="form-label">Country</label>
+            <select class="form-control" id="decCountry" required>
+              <option value="">Select Country</option>
+              <option value="India">India</option>
+              <option value="Malaysia">Malaysia</option>
+              <option value="Philippines">Philippines</option>
+              <option value="Cambodia">Cambodia</option>
+              <option value="Kenya">Kenya</option>
+              <option value="Myanmar">Myanmar</option>
+              <option value="Maldives">Maldives</option>
+              <option value="Sri Lanka">Sri Lanka</option>
+              <option value="Australia">Australia</option>
+              <option value="UK">UK</option>
+              <option value="US">US</option>
+              <option value="Thailand">Thailand</option>
+              <option value="Switzerland">Switzerland</option>
+              <option value="UAE">UAE</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="decEmail" class="form-label">Email</label>
+            <input type="email" class="form-control" id="decEmail" required />
+          </div>
+          <div class="mb-3">
+            <label for="comment" class="form-label">Comments</label>
+            <textarea
+              class="form-control"
+              id="comment"
+              rows="4"
+              required
+            ></textarea>
+          </div>
+          <button type="submit" class="submit-btn">Submit Feedback</button>
         </form>
       </div>
     </div>
@@ -900,14 +951,33 @@
             pdfFrame.src = "";
           });
 
-        // Popup Form Functionality - MODIFIED
+        // Popup Form Functionality
         const popupForm = document.getElementById("popupForm");
         const closePopup = document.getElementById("closePopup");
         const registrationForm = document.getElementById("registrationForm");
 
-        // Check if user has already submitted the form
+        // New December Popup Form Elements
+        const decPopupForm = document.getElementById("decPopupForm");
+        const closeDecPopup = document.getElementById("closeDecPopup");
+        const decRegistrationForm = document.getElementById(
+          "decRegistrationForm"
+        );
+
+        // Check if user has already submitted the original form
         function hasSubmittedForm() {
           return localStorage.getItem("doctorRegistered") === "true";
+        }
+
+        // Check if user has already submitted the December form
+        function hasSubmittedDecForm() {
+          return localStorage.getItem("doctorDecRegistered") === "true";
+        }
+
+        // Check if current date is after December 11, 2025
+        function isAfterDec11() {
+          const currentDate = new Date();
+          const dec11Date = new Date("December 11, 2025");
+          return currentDate >= dec11Date;
         }
 
         // Freeze the website
@@ -921,80 +991,20 @@
         }
 
         // Enable close button
-        function enableCloseButton() {
-          closePopup.classList.add("enabled");
+        function enableCloseButton(closeButton) {
+          closeButton.classList.add("enabled");
         }
-
-        // Check if form is already submitted
-        if (!hasSubmittedForm()) {
-          // Show popup after 5 seconds and freeze website
-          setTimeout(function () {
-            popupForm.classList.remove("hidden");
-            freezeWebsite(); // Freeze website when popup appears
-          }, 5000);
-        } else {
-          // User has already submitted the form
-          unfreezeWebsite();
-          popupForm.classList.add("hidden");
-        }
-
-        // Close popup when X is clicked - only if form is submitted
-        closePopup.addEventListener("click", function () {
-          if (hasSubmittedForm()) {
-            popupForm.classList.add("hidden");
-            unfreezeWebsite();
-          }
-          // If form is not submitted, do nothing (button is hidden)
-        });
-
-        // Close popup when clicking outside the form - only if form is submitted
-        popupForm.addEventListener("click", function (e) {
-          if (e.target === popupForm && hasSubmittedForm()) {
-            popupForm.classList.add("hidden");
-            unfreezeWebsite();
-          }
-        });
-
-        // Handle form submission
-        registrationForm.addEventListener("submit", function (e) {
-          e.preventDefault();
-
-          // Get form data
-          const formData = {
-            name: document.getElementById("name").value,
-            country: document.getElementById("country").value,
-            email: document.getElementById("email").value,
-            specialization: document.getElementById("specialization").value,
-            timestamp: new Date().toISOString(),
-          };
-
-          // Store with consistent key for unique identification
-          localStorage.setItem("doctorRegistered", "true");
-          localStorage.setItem("doctorEmail", formData.email);
-          localStorage.setItem("registrationDate", new Date().toISOString());
-
-          // Enable the close button
-          enableCloseButton();
-
-          // Submit to Google Sheets
-          submitToGoogleSheets(formData);
-
-          // Hide the popup and unfreeze the website
-          popupForm.classList.add("hidden");
-          unfreezeWebsite();
-
-          // Show success message
-          alert(
-            "Thank you for registering! You can now continue browsing the website."
-          );
-        });
 
         // Function to submit data to Google Sheets
         function submitToGoogleSheets(data) {
-          // Replace with your Google Apps Script Web App URL
-          const scriptURL =
-            "https://script.google.com/macros/s/AKfycbygmVUu36h9VUlpCaoVBf5ZpAZ9pCVun2LEtqOqh3K1KVNHNsKS-U1XJpGXM3WPyJ6CUQ/exec";
-
+          let scriptURL;
+          
+          if (data.formType === "original") {
+            scriptURL = "https://script.google.com/macros/s/AKfycbygmVUu36h9VUlpCaoVBf5ZpAZ9pCVun2LEtqOqh3K1KVNHNsKS-U1XJpGXM3WPyJ6CUQ/exec";
+          } else if (data.formType === "december") {
+            scriptURL = "https://script.google.com/macros/s/AKfycbyAIRfH-jhNIvwx-Sh4BFizrBBr20t_ZKG93uhfzBrdPedcamJlFacbrRkCB2wzENQz/exec";
+          }
+           
           fetch(scriptURL, {
             method: "POST",
             mode: "no-cors",
@@ -1010,6 +1020,137 @@
               console.error("Error submitting form data:", error);
             });
         }
+
+        // Check which form to show
+        if (isAfterDec11()) {
+          // Show December popup after 5 seconds if not submitted
+          if (!hasSubmittedDecForm()) {
+            setTimeout(function () {
+              decPopupForm.classList.remove("hidden");
+              freezeWebsite(); // Freeze website when popup appears
+            }, 5000);
+          } else {
+            // User has already submitted the December form
+            unfreezeWebsite();
+            decPopupForm.classList.add("hidden");
+          }
+        } else {
+          // Show original popup after 5 seconds if not submitted
+          if (!hasSubmittedForm()) {
+            setTimeout(function () {
+              popupForm.classList.remove("hidden");
+              freezeWebsite(); // Freeze website when popup appears
+            }, 5000);
+          } else {
+            // User has already submitted the original form
+            unfreezeWebsite();
+            popupForm.classList.add("hidden");
+          }
+        }
+
+        // Close original popup when X is clicked - only if form is submitted
+        closePopup.addEventListener("click", function () {
+          if (hasSubmittedForm()) {
+            popupForm.classList.add("hidden");
+            unfreezeWebsite();
+          }
+          // If form is not submitted, do nothing (button is hidden)
+        });
+
+        // Close December popup when X is clicked - only if form is submitted
+        closeDecPopup.addEventListener("click", function () {
+          if (hasSubmittedDecForm()) {
+            decPopupForm.classList.add("hidden");
+            unfreezeWebsite();
+          }
+          // If form is not submitted, do nothing (button is hidden)
+        });
+
+        // Close original popup when clicking outside the form - only if form is submitted
+        popupForm.addEventListener("click", function (e) {
+          if (e.target === popupForm && hasSubmittedForm()) {
+            popupForm.classList.add("hidden");
+            unfreezeWebsite();
+          }
+        });
+
+        // Close December popup when clicking outside the form - only if form is submitted
+        decPopupForm.addEventListener("click", function (e) {
+          if (e.target === decPopupForm && hasSubmittedDecForm()) {
+            decPopupForm.classList.add("hidden");
+            unfreezeWebsite();
+          }
+        });
+
+        // Handle original form submission
+        registrationForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          // Get form data
+          const formData = {
+            name: document.getElementById("name").value,
+            country: document.getElementById("country").value,
+            email: document.getElementById("email").value,
+            specialization: document.getElementById("specialization").value,
+            timestamp: new Date().toISOString(),
+            formType: "original",
+          };
+
+          // Store with consistent key for unique identification
+          localStorage.setItem("doctorRegistered", "true");
+          localStorage.setItem("doctorEmail", formData.email);
+          localStorage.setItem("registrationDate", new Date().toISOString());
+
+          // Enable the close button
+          enableCloseButton(closePopup);
+
+          // Submit to Google Sheets
+          submitToGoogleSheets(formData);
+
+          // Hide the popup and unfreeze the website
+          popupForm.classList.add("hidden");
+          unfreezeWebsite();
+
+          // Show success message
+          alert(
+            "Thank you for registering! You can now continue browsing the website."
+          );
+        });
+
+        // Handle December form submission
+        decRegistrationForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          // Get form data
+          const formData = {
+            name: document.getElementById("decName").value,
+            country: document.getElementById("decCountry").value,
+            email: document.getElementById("decEmail").value,
+            comment: document.getElementById("comment").value,
+            timestamp: new Date().toISOString(),
+            formType: "december",
+          };
+
+          // Store with consistent key for unique identification
+          localStorage.setItem("doctorDecRegistered", "true");
+          localStorage.setItem("doctorDecEmail", formData.email);
+          localStorage.setItem("decRegistrationDate", new Date().toISOString());
+
+          // Enable the close button
+          enableCloseButton(closeDecPopup);
+
+          // Submit to Google Sheets
+          submitToGoogleSheets(formData);
+
+          // Hide the popup and unfreeze the website
+          decPopupForm.classList.add("hidden");
+          unfreezeWebsite();
+
+          // Show success message
+          alert(
+            "Thank you for your feedback! You can now continue browsing the website."
+          );
+        });
       });
     </script>
   </body>
