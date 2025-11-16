@@ -360,6 +360,21 @@
         margin-top: 10px;
         font-family: "swis721_BT_roman";
       }
+
+      /* PDF loading indicator */
+      .pdf-loading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        flex-direction: column;
+      }
+
+      .spinner-border {
+        width: 3rem;
+        height: 3rem;
+        color: #004383;
+      }
     </style>
   </head>
   <body>
@@ -877,11 +892,18 @@
             ></button>
           </div>
           <div class="modal-body">
+            <div id="pdfLoading" class="pdf-loading">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading PDF...</span>
+              </div>
+              <p class="mt-3">Loading PDF document...</p>
+            </div>
             <iframe
               class="pdf-viewer"
               id="pdfFrame"
               src=""
               frameborder="0"
+              style="display: none"
             ></iframe>
           </div>
           <div class="modal-footer">
@@ -911,36 +933,68 @@
         const pdfFrame = document.getElementById("pdfFrame");
         const downloadPdf = document.getElementById("downloadPdf");
         const pdfModalLabel = document.getElementById("pdfModalLabel");
+        const pdfLoading = document.getElementById("pdfLoading");
 
         pdfButtons.forEach((button) => {
           button.addEventListener("click", function () {
             const pdfFile = this.getAttribute("data-pdf");
             const pdfTitle = this.getAttribute("data-title");
-            const pdfPath = `./pdfs/${pdfFile}`; // Define pdfPath here
+            const pdfPath = `./pdfs/${pdfFile}`;
 
-            console.log("Attempting to load PDF:", pdfPath);
+            console.log("=== PDF DEBUG INFO ===");
+            console.log("PDF File name:", pdfFile);
+            console.log("Full PDF path:", pdfPath);
+            console.log("PDF Title:", pdfTitle);
+
+            // Show loading indicator
+            pdfLoading.style.display = "flex";
+            pdfFrame.style.display = "none";
+
+            // Set modal title
+            pdfModalLabel.textContent = pdfTitle;
+
+            // Show modal immediately
+            pdfModal.show();
 
             // Test if PDF exists first
             fetch(pdfPath)
               .then((response) => {
+                console.log("Fetch Response Status:", response.status);
+                console.log("Fetch Response OK:", response.ok);
+
                 if (response.ok) {
-                  // PDF exists, load it
+                  // Set the PDF source
                   pdfFrame.src = pdfPath;
                   downloadPdf.href = pdfPath;
-                  pdfModalLabel.textContent = pdfTitle;
-                  pdfModal.show();
-                  console.log("PDF loaded successfully:", pdfFile);
+
+                  // Hide loading and show PDF when loaded
+                  pdfFrame.onload = function () {
+                    pdfLoading.style.display = "none";
+                    pdfFrame.style.display = "block";
+                    console.log("✅ PDF loaded successfully");
+                  };
+
+                  // Fallback in case iframe onload doesn't fire
+                  setTimeout(function () {
+                    pdfLoading.style.display = "none";
+                    pdfFrame.style.display = "block";
+                  }, 2000);
                 } else {
+                  console.error("❌ PDF not found, status:", response.status);
                   throw new Error(
                     "PDF not found (HTTP " + response.status + ")"
                   );
                 }
               })
               .catch((error) => {
-                console.error("Error loading PDF:", error);
-                alert(
-                  `Sorry, the PDF "${pdfFile}" is currently unavailable.\n\nError: ${error.message}\n\nPlease check the file exists in the pdfs folder.`
-                );
+                console.error("❌ Error loading PDF:", error);
+                pdfLoading.innerHTML = `
+                  <div class="alert alert-danger">
+                    <h4>PDF Unavailable</h4>
+                    <p>Sorry, the PDF "${pdfFile}" is currently unavailable.</p>
+                    <p><small>Error: ${error.message}</small></p>
+                  </div>
+                `;
               });
           });
         });
@@ -949,6 +1003,15 @@
           .getElementById("pdfModal")
           .addEventListener("hidden.bs.modal", function () {
             pdfFrame.src = "";
+            pdfLoading.style.display = "flex";
+            pdfFrame.style.display = "none";
+            // Reset loading content
+            pdfLoading.innerHTML = `
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading PDF...</span>
+              </div>
+              <p class="mt-3">Loading PDF document...</p>
+            `;
           });
 
         // Popup Form Functionality
@@ -977,6 +1040,7 @@
         function isAfterDec11() {
           const currentDate = new Date();
           const dec11Date = new Date("December 11, 2025");
+
           return currentDate >= dec11Date;
         }
 
@@ -998,13 +1062,15 @@
         // Function to submit data to Google Sheets
         function submitToGoogleSheets(data) {
           let scriptURL;
-          
+
           if (data.formType === "original") {
-            scriptURL = "https://script.google.com/macros/s/AKfycbygmVUu36h9VUlpCaoVBf5ZpAZ9pCVun2LEtqOqh3K1KVNHNsKS-U1XJpGXM3WPyJ6CUQ/exec";
+            scriptURL =
+              "https://script.google.com/macros/s/AKfycbygmVUu36h9VUlpCaoVBf5ZpAZ9pCVun2LEtqOqh3K1KVNHNsKS-U1XJpGXM3WPyJ6CUQ/exec";
           } else if (data.formType === "december") {
-            scriptURL = "https://script.google.com/macros/s/AKfycbyAIRfH-jhNIvwx-Sh4BFizrBBr20t_ZKG93uhfzBrdPedcamJlFacbrRkCB2wzENQz/exec";
+            scriptURL =
+              "https://script.google.com/macros/s/AKfycbyAIRfH-jhNIvwx-Sh4BFizrBBr20t_ZKG93uhfzBrdPedcamJlFacbrRkCB2wzENQz/exec";
           }
-           
+
           fetch(scriptURL, {
             method: "POST",
             mode: "no-cors",
