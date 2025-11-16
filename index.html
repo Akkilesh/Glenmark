@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>APAC Summit Microsite</title>
-     <link rel="icon" type="image/png" href="./images/apac.webp">
+    <link rel="icon" type="image/png" href="./images/apac.webp" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -842,33 +842,44 @@
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        const pdfButtons = document.querySelectorAll(".pdf-btn");
-        const pdfModal = new bootstrap.Modal(
-          document.getElementById("pdfModal")
-        );
-        const pdfFrame = document.getElementById("pdfFrame");
-        const downloadPdf = document.getElementById("downloadPdf");
-        const pdfModalLabel = document.getElementById("pdfModalLabel");
+       const pdfButtons = document.querySelectorAll(".pdf-btn");
+  const pdfModal = new bootstrap.Modal(document.getElementById("pdfModal"));
+  const pdfFrame = document.getElementById("pdfFrame");
+  const downloadPdf = document.getElementById("downloadPdf");
+  const pdfModalLabel = document.getElementById("pdfModalLabel");
 
-        pdfButtons.forEach((button) => {
-          button.addEventListener("click", function () {
-            const pdfFile = this.getAttribute("data-pdf");
-            const pdfTitle = this.getAttribute("data-title");
-
-            pdfFrame.src = `./pdfs/${pdfFile}`;
-            console.log(pdfFrame.src);
-            downloadPdf.href = `./pdfs/${pdfFile}`;
+  pdfButtons.forEach((button) => {
+    button.addEventListener("click", function () {
+      const pdfFile = this.getAttribute("data-pdf");
+      const pdfTitle = this.getAttribute("data-title");
+      const pdfPath = `./pdfs/${pdfFile}`; // Define pdfPath here
+      
+      console.log("Attempting to load PDF:", pdfPath);
+      
+      // Test if PDF exists first
+      fetch(pdfPath)
+        .then(response => {
+          if (response.ok) {
+            // PDF exists, load it
+            pdfFrame.src = pdfPath;
+            downloadPdf.href = pdfPath;
             pdfModalLabel.textContent = pdfTitle;
-
             pdfModal.show();
-          });
+            console.log("PDF loaded successfully:", pdfFile);
+          } else {
+            throw new Error('PDF not found (HTTP ' + response.status + ')');
+          }
+        })
+        .catch(error => {
+          console.error("Error loading PDF:", error);
+          alert(`Sorry, the PDF "${pdfFile}" is currently unavailable.\n\nError: ${error.message}\n\nPlease check the file exists in the pdfs folder.`);
         });
+    });
+  });
 
-        document
-          .getElementById("pdfModal")
-          .addEventListener("hidden.bs.modal", function () {
-            pdfFrame.src = "";
-          });
+  document.getElementById("pdfModal").addEventListener("hidden.bs.modal", function () {
+    pdfFrame.src = "";
+  });
 
         // Popup Form Functionality - MODIFIED
         const popupForm = document.getElementById("popupForm");
