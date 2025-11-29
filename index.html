@@ -3,6 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
     <title>APAC Summit Microsite</title>
     <link rel="icon" type="image/png" href="./images/apac.webp" />
     <link
@@ -359,7 +362,7 @@
 
       .mandatory-message {
         color: #ffcc00;
-        font-size: 0.9rem;
+        font-size: 1.5rem;
         text-align: center;
         margin-top: 10px;
         font-family: "swis721_BT_roman";
@@ -380,11 +383,39 @@
         color: #004383;
       }
 
+      /* Yoga Form Styles */
+      .yoga-form .popup-content {
+        background: linear-gradient(to bottom, #8f6b00 0%, #a3b300 100%);
+      }
+      
+      .yoga-form .popup-title {
+        color: white;
+      }
+      
+      .yoga-form .form-label {
+        color: white;
+      }
+      
+      .yoga-form .submit-btn {
+        background-color: #8f6b00;
+      }
+      
+      .yoga-form .submit-btn:hover {
+        background-color: #6b4f00;
+      }
+      
+      .form-check-label.text-white {
+        color: white !important;
+      }
+
       @media (min-width: 768px) and (max-width: 1024px) {
         .card-gradient img {
           max-width: 230px !important;
         }
       }
+
+      /*  */
+      
     </style>
   </head>
   <body>
@@ -442,7 +473,46 @@
       </div>
     </div>
 
-    <!-- New Popup Form for December 11, 2025 -->
+    <!-- Yoga Registration Form -->
+    <div id="yogaPopupForm" class="popup-form yoga-form hidden">
+      <div class="popup-content">
+        <span class="popup-close" id="closeYogaPopup">&times;</span>
+        <h3 class="popup-title">Health and Mind Wellness Early Registration</h3>
+        <p class="mandatory-message">
+          We have limited spots.
+        </p>
+        <form id="yogaRegistrationForm">
+          <div class="mb-3">
+            <label for="yogaName" class="form-label">Name</label>
+            <input type="text" class="form-control" id="yogaName" required />
+          </div>
+          <div class="mb-3">
+            <label for="yogaContact" class="form-label">Contact Number</label>
+            <input type="tel" class="form-control" id="yogaContact" required />
+          </div>
+          <div class="mb-3">
+            <label for="yogaEmail" class="form-label">Email</label>
+            <input type="email" class="form-control" id="yogaEmail" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Will you be attending the Health and Mind Wellness?</label>
+            <div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="attendingYoga" id="yogaYes" value="Yes" required>
+                <label class="form-check-label text-white" for="yogaYes">Yes</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="attendingYoga" id="yogaNo" value="No" required>
+                <label class="form-check-label text-white" for="yogaNo">No</label>
+              </div>
+            </div>
+          </div>
+          <button type="submit" class="submit-btn">Register for Yoga</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- December Feedback Form -->
     <div id="decPopupForm" class="popup-form hidden">
       <div class="popup-content">
         <span class="popup-close" id="closeDecPopup">&times;</span>
@@ -977,6 +1047,10 @@
           return getSafeStorage("doctorRegistered") === "true";
         }
 
+        function hasSubmittedYogaForm() {
+          return getSafeStorage("yogaRegistered") === "true";
+        }
+
         function hasSubmittedDecForm() {
           return getSafeStorage("doctorDecRegistered") === "true";
         }
@@ -1064,13 +1138,23 @@
         const popupForm = document.getElementById("popupForm");
         const closePopup = document.getElementById("closePopup");
         const registrationForm = document.getElementById("registrationForm");
+        const yogaPopupForm = document.getElementById("yogaPopupForm");
+        const closeYogaPopup = document.getElementById("closeYogaPopup");
+        const yogaRegistrationForm = document.getElementById("yogaRegistrationForm");
         const decPopupForm = document.getElementById("decPopupForm");
         const closeDecPopup = document.getElementById("closeDecPopup");
         const decRegistrationForm = document.getElementById(
           "decRegistrationForm"
         );
 
-        // Check if current date is after December 10, 2025
+        // Check date functions
+        function isYogaRegistrationPeriod() {
+          const currentDate = new Date();
+          const yogaStartDate = new Date("November 30, 2025");
+          const yogaEndDate = new Date("December 9, 2025 23:59:59");
+          return currentDate >= yogaStartDate && currentDate <= yogaEndDate;
+        }
+
         function isAfterDec11() {
           const currentDate = new Date();
           const dec11Date = new Date("December 10, 2025");
@@ -1099,6 +1183,9 @@
           if (data.formType === "original") {
             scriptURL =
               "https://script.google.com/macros/s/AKfycbygmVUu36h9VUlpCaoVBf5ZpAZ9pCVun2LEtqOqh3K1KVNHNsKS-U1XJpGXM3WPyJ6CUQ/exec";
+          } else if (data.formType === "yoga") {
+            scriptURL =
+              "https://script.google.com/macros/s/AKfycbyim7MnH_F81C_9MkxxR0LpGWOpRgrkVwvBDk_2ddRb20Rm1yHGNpIk7lZX8YLNuj_zJQ/exec";
           } else if (data.formType === "december") {
             scriptURL =
               "https://script.google.com/macros/s/AKfycbyAIRfH-jhNIvwx-Sh4BFizrBBr20t_ZKG93uhfzBrdPedcamJlFacbrRkCB2wzENQz/exec";
@@ -1132,6 +1219,17 @@
             unfreezeWebsite();
             decPopupForm.classList.add("hidden");
           }
+        } else if (isYogaRegistrationPeriod()) {
+          // Show Yoga popup after 5 seconds if not submitted
+          if (!hasSubmittedYogaForm()) {
+            setTimeout(function () {
+              yogaPopupForm.classList.remove("hidden");
+              freezeWebsite();
+            }, 3000);
+          } else {
+            unfreezeWebsite();
+            yogaPopupForm.classList.add("hidden");
+          }
         } else {
           // Show original popup after 5 seconds if not submitted
           if (!hasSubmittedForm()) {
@@ -1153,6 +1251,14 @@
           }
         });
 
+        // Close Yoga popup when X is clicked
+        closeYogaPopup.addEventListener("click", function () {
+          if (hasSubmittedYogaForm()) {
+            yogaPopupForm.classList.add("hidden");
+            unfreezeWebsite();
+          }
+        });
+
         // Close December popup when X is clicked
         closeDecPopup.addEventListener("click", function () {
           if (hasSubmittedDecForm()) {
@@ -1165,6 +1271,14 @@
         popupForm.addEventListener("click", function (e) {
           if (e.target === popupForm && hasSubmittedForm()) {
             popupForm.classList.add("hidden");
+            unfreezeWebsite();
+          }
+        });
+
+        // Close Yoga popup when clicking outside
+        yogaPopupForm.addEventListener("click", function (e) {
+          if (e.target === yogaPopupForm && hasSubmittedYogaForm()) {
+            yogaPopupForm.classList.add("hidden");
             unfreezeWebsite();
           }
         });
@@ -1202,6 +1316,36 @@
 
           alert(
             "Thank you for registering! You can now continue browsing the website."
+          );
+        });
+
+        // Handle Yoga form submission - UPDATED FOR SAFARI
+        yogaRegistrationForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+          
+          const attendingYoga = document.querySelector('input[name="attendingYoga"]:checked').value;
+          
+          const formData = {
+            name: document.getElementById("yogaName").value,
+            contact: document.getElementById("yogaContact").value,
+            email: document.getElementById("yogaEmail").value,
+            attendingYoga: attendingYoga,
+            timestamp: new Date().toISOString(),
+            formType: "yoga",
+          };
+
+          // Use safe storage for Safari
+          setSafeStorage("yogaRegistered", "true");
+          setSafeStorage("yogaEmail", formData.email);
+          setSafeStorage("yogaRegistrationDate", new Date().toISOString());
+
+          enableCloseButton(closeYogaPopup);
+          submitToGoogleSheets(formData);
+          yogaPopupForm.classList.add("hidden");
+          unfreezeWebsite();
+
+          alert(
+            "Thank you for registering for the Yoga session! You can now continue browsing the website."
           );
         });
 
