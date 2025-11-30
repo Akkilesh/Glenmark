@@ -486,6 +486,69 @@ ease;
   }
 }
 
+      /* Countdown Timer Styles */
+      .countdown-section {
+        background: linear-gradient(to right, #014280, #006b8f);
+        color: white;
+        padding: 2rem 0;
+        text-align: center;
+      }
+
+      .countdown-title {
+        font-family: "swis_cn_bt_bold";
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .countdown-container {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+      }
+
+      .countdown-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .countdown-value {
+        font-family: "swis_cn_bt_bold";
+        font-size: 3rem;
+        line-height: 1;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        padding: 0.5rem 1rem;
+        min-width: 100px;
+        margin-bottom: 0.5rem;
+      }
+
+      .countdown-label {
+        font-family: "swis721_BT_roman";
+        font-size: 1.2rem;
+        text-transform: uppercase;
+      }
+
+      @media (max-width: 768px) {
+        .countdown-title {
+          font-size: 1.25rem;
+        }
+        
+        .countdown-value {
+          font-size: 2rem;
+          min-width: 70px;
+          padding: 0.4rem 0.8rem;
+        }
+        
+        .countdown-label {
+          font-size: 0.9rem;
+        }
+        
+        .countdown-container {
+          gap: 1rem;
+        }
+      }
 
           
     </style>
@@ -680,6 +743,31 @@ ease;
           class="img-fluid w-100 home-bg"
         />
       </picture>
+    </section>
+
+    <!-- Countdown Timer Section -->
+    <section class="countdown-section">
+      <div class="container">
+        <h2 class="countdown-title">COUNTDOWN TO APAC SUMMIT 2025</h2>
+        <div class="countdown-container">
+          <div class="countdown-item">
+            <div class="countdown-value" id="days">00</div>
+            <div class="countdown-label">Days</div>
+          </div>
+          <div class="countdown-item">
+            <div class="countdown-value" id="hours">00</div>
+            <div class="countdown-label">Hours</div>
+          </div>
+          <div class="countdown-item">
+            <div class="countdown-value" id="minutes">00</div>
+            <div class="countdown-label">Minutes</div>
+          </div>
+          <div class="countdown-item">
+            <div class="countdown-value" id="seconds">00</div>
+            <div class="countdown-label">Seconds</div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section class="py-4 text-center ptpb">
@@ -1083,6 +1171,40 @@ ease;
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {
+        // Countdown Timer Functionality
+        function updateCountdown() {
+          const targetDate = new Date("December 8, 2025 00:00:00").getTime();
+          const now = new Date().getTime();
+          const timeRemaining = targetDate - now;
+          
+          // If the countdown is over, show zeros
+          if (timeRemaining <= 0) {
+            document.getElementById("days").textContent = "00";
+            document.getElementById("hours").textContent = "00";
+            document.getElementById("minutes").textContent = "00";
+            document.getElementById("seconds").textContent = "00";
+            return;
+          }
+          
+          // Calculate days, hours, minutes and seconds
+          const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+          
+          // Update the display
+          document.getElementById("days").textContent = days.toString().padStart(2, '0');
+          document.getElementById("hours").textContent = hours.toString().padStart(2, '0');
+          document.getElementById("minutes").textContent = minutes.toString().padStart(2, '0');
+          document.getElementById("seconds").textContent = seconds.toString().padStart(2, '0');
+        }
+        
+        // Initialize the countdown
+        updateCountdown();
+        
+        // Update the countdown every second
+        setInterval(updateCountdown, 1000);
+
         // Safari-compatible storage check
         function isStorageAvailable() {
           try {
