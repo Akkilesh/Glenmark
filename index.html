@@ -1300,7 +1300,7 @@
             country: document.getElementById("country").value,
             email: document.getElementById("email").value,
             specialization: document.getElementById("specialization").value,
-            timestamp: new Date().toISOString(),
+            timestamp: new Date().toLocaleString(),
             formType: "original",
           };
 
@@ -1320,34 +1320,36 @@
         });
 
         // Handle Yoga form submission - UPDATED FOR SAFARI
-        yogaRegistrationForm.addEventListener("submit", function (e) {
-          e.preventDefault();
-          
-          const attendingYoga = document.querySelector('input[name="attendingYoga"]:checked').value;
-          
-          const formData = {
-            name: document.getElementById("yogaName").value,
-            contact: document.getElementById("yogaContact").value,
-            email: document.getElementById("yogaEmail").value,
-            attendingYoga: attendingYoga,
-            timestamp: new Date().toISOString(),
-            formType: "yoga",
-          };
+      // Handle Yoga form submission - UPDATED FOR SAFARI
+yogaRegistrationForm.addEventListener("submit", function (e) {
+  e.preventDefault();
+  
+  const attendingYoga = document.querySelector('input[name="attendingYoga"]:checked').value;
+  
+  const formData = {
+    name: document.getElementById("yogaName").value,
+    contact: document.getElementById("yogaContact").value,
+    email: document.getElementById("yogaEmail").value,
+    attendingYoga: attendingYoga,
+    timestamp: new Date().toLocaleString(), // "11/28/2025, 12:25:54 PM"
+    formType: "yoga",
+  };
 
-          // Use safe storage for Safari
-          setSafeStorage("yogaRegistered", "true");
-          setSafeStorage("yogaEmail", formData.email);
-          setSafeStorage("yogaRegistrationDate", new Date().toISOString());
+  // Use safe storage for Safari
+  setSafeStorage("yogaRegistered", "true");
+  setSafeStorage("yogaEmail", formData.email);
+  setSafeStorage("yogaRegistrationDate", new Date().toISOString());
 
-          enableCloseButton(closeYogaPopup);
-          submitToGoogleSheets(formData);
-          yogaPopupForm.classList.add("hidden");
-          unfreezeWebsite();
+  enableCloseButton(closeYogaPopup);
+  submitToGoogleSheets(formData);
+  yogaPopupForm.classList.add("hidden");
+  unfreezeWebsite();
 
-          alert(
-            "Thank you for registering for the Yoga session! You can now continue browsing the website."
-          );
-        });
+  alert(
+    "Thank you for registering for the Yoga session! You can now continue browsing the website."
+  );
+});
+
 
         // Handle December form submission - UPDATED FOR SAFARI
         decRegistrationForm.addEventListener("submit", function (e) {
@@ -1358,7 +1360,7 @@
             country: document.getElementById("decCountry").value,
             email: document.getElementById("decEmail").value,
             comment: document.getElementById("comment").value,
-            timestamp: new Date().toISOString(),
+            timestamp: new Date().toLocaleString(),
             formType: "december",
           };
 
